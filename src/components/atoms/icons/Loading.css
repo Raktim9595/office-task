@@ -1,0 +1,41 @@
+.loading__svg {
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.loading__svg path {
+  stroke: #ffffff;
+  stroke-width: 6;
+  stroke-dasharray: 288.5;
+  stroke-linecap: round;
+  fill: none;
+  transform-origin: 50px 50px;
+  animation: pathStroke 3.75s infinite ease-in-out,
+    pathRotate 7.5s infinite cubic-bezier(1, 0.5, 0, 0.5);
+}
+
+@keyframes pathStroke {
+  0% {
+    stroke-dashoffset: -288.5;
+  }
+  40%,
+  70% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 288.5;
+  }
+}
+
+@keyframes pathRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-540deg);
+  }
+  100% {
+    transform: rotate(-1080deg);
+  }
+}

@@ -1,0 +1,73 @@
+@import "../../settings/_variables.css";
+
+.basic__btn {
+  cursor: pointer;
+  background-color: var(--primary);
+  border-radius: 5px;
+  color: white;
+  border: 1px solid var(--primary);
+  outline: 1px solid var(--primary);
+  width: max-content;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* .basic__btn:active {
+  transform: scale(0.9);
+} */
+
+.btn__small {
+  padding: 0.5rem 1.2rem;
+  border-radius: 0.3rem;
+}
+
+.btn__large {
+  padding: 1.1rem 2.4rem;
+  border-radius: 0.6rem;
+}
+
+.success {
+  background-color: var(--success);
+  border: 1px solid var(--success);
+  outline: 1px solid var(--success);
+}
+
+.error {
+  background-color: var(--error);
+  border: 1px solid var(--error);
+  outline: 1px solid var(--error);
+}
+
+.warning {
+  background-color: var(--warning);
+  border: 1px solid var(--warning);
+  outline: 1px solid var(--warning);
+}
+
+.outlined {
+  background-color: white;
+  color: black;
+}
+
+.text {
+  color: black;
+  background-color: white;
+  border: none;
+  outline: none;
+  transition: none;
+}
+
+/* .text:active {
+  transform: scale(1);
+} */
+
+.pill {
+  border-radius: 1.5rem;
+}
+
+.w-full {
+  width: 100%;
+}

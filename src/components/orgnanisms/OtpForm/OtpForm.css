@@ -1,0 +1,12 @@
+.otp__form__wrapper {
+  /* height: auto 281px;
+  width: auto 414px; */
+  padding: 27.5px 33px;
+  background-color: #fff;
+}
+
+.otp__form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}

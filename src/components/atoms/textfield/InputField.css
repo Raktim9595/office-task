@@ -1,0 +1,56 @@
+@import "../../settings/_variables.css";
+
+.input__field__wrapper {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.phone__input {
+  width: 329px;
+}
+
+.phone__input > div::before {
+  content: "+977";
+  padding-left: 8px;
+  color: #a7a7a7;
+}
+
+.phone__wrapper {
+  column-gap: 13px;
+}
+
+.flag__box {
+  display: flex;
+  width: 81px;
+  height: 52px;
+  padding: 0 11px 0 17px;
+  align-items: center;
+  gap: 13px;
+  border-radius: 5px;
+  border: 1px solid var(--secondary, #a7a7a7);
+  background: #fff;
+}
+
+.nepal {
+  width: 23px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.dropdown__phone {
+  width: 17px;
+  height: 9px;
+  flex-shrink: 0;
+}
+
+.input__otp__box {
+  padding: 15px 20px;
+  width: 50px;
+  border-radius: 5px;
+  border: 1px solid var(--secondary);
+  place-items: center;
+  font-size: 16px;
+}

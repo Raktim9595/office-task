@@ -1,0 +1,17 @@
+@import "../../settings/_variables.css";
+
+.main__layout__container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: var(--bg-color);
+}
+
+.main__section {
+  width: auto 480px;
+  height: auto 450px;
+  display: block;
+}

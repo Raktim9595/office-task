@@ -1,0 +1,19 @@
+@import "../../settings/_variables.css";
+
+.change__passform__wrapper {
+  /* width: auto 482px;
+  height: auto 557px; */
+  background-color: white;
+  padding: 27.5px 33px;
+}
+
+.change__pass__form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.otp__divider {
+  height: 1px;
+  background-color: var(--secondary);
+}

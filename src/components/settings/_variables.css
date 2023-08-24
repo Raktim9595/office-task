@@ -1,0 +1,20 @@
+:root {
+  /* color  */
+  --primary: #0F6EFB;
+  --error: red;
+  --warning: orange;
+  --success: #30CC65;
+  --secondary: #A7A7A7;
+  --bg-color: #E9F2FF;
+
+  /* fontsize  */
+  --fontSmall: 1.3rem;
+  --fontMedium: 1.6rem;
+  --fontLarge: 2rem;
+  --fontExtralarge: 2.4rem;
+
+  /* headingFontSize */
+  --primary-heading: 4rem;
+  --secondary-heading: 3.2rem;
+  --tertiary-heading: 2.5rem;
+}
