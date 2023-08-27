@@ -1,23 +1,53 @@
 import { Typography } from "@mui/material";
 import { FormikProps, useFormik } from "formik";
 import { useMutation } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 import "./SignIn.css";
 import { SignInProps } from "../../../interfaces/signIn";
-import { Button, InputEmail, InputPassword, CustomChecbox } from "../../atoms";
+import { Button, InputEmail, InputPassword, CustomChecbox, Loading } from "../../atoms";
 import { siginInValidation } from "../../../validation/authValidation";
-import Loading from "../../atoms/icons/Loading";
 import { loginUser } from "../../../requests/authRequests";
+import { useCustomDispatch } from "../../../store/hooks";
+import { setUser } from "../../../store/userSlice";
+import { ErrorData } from "../../../interfaces/errorData";
+import { setToken } from "../../../store/authTokenSlice";
 
 interface Props {
   changeSingUp?: () => void;
 }
 
 const SIgnIn = ({ changeSingUp }: Props) => {
-  const { mutate, isLoading, isSuccess, status } = useMutation(loginUser, {
-    onSuccess: () => {
-      console.log("login success")
+  const dispatch = useCustomDispatch();
+  const navigate = useNavigate();
+
+  const { mutate, isLoading, isSuccess } = useMutation(loginUser, {
+    onSuccess: (res) => {
+      dispatch(setUser({
+        id: 1,
+        name: "Raktim Thapa",
+        email: "apple123456@gmail.com",
+        phoneNumber: "9814482973"
+      }));
+      dispatch(setToken({
+        authToken: res.data.token
+      }));
+      localStorage.setItem("authToken", res.data.token);
+      console.log("login success");
+      navigate("/users/users_table")
+    },
+    onError: ({ response }: AxiosError) => {
+      var err: ErrorData = (response?.data) as ErrorData;
+      if(response?.status === 404) {
+        formik.setErrors({
+          email: err.message
+        })
+      } else {
+        formik.setErrors({
+          password: err.message
+        })
+      }
     }
   });
   const formik: FormikProps<SignInProps> = useFormik<SignInProps>({
@@ -27,16 +57,11 @@ const SIgnIn = ({ changeSingUp }: Props) => {
       rememberUser: false,
     },
     validationSchema: siginInValidation,
-    onSubmit: ({ email, password, rememberUser }) => {
-      console.log({ email, password, rememberUser });
+    onSubmit: ({ email, password }) => {
       mutate({
         email,
         password
       });
-      if (status === "success") {
-        formik.values.email = "";
-        formik.values.password = "";
-      }
     },
   });
 

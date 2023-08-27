@@ -1,15 +1,18 @@
 import { RefObject, useEffect } from "react";
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
+import clsx from "clsx";
+import "./OtpField.css";
 
 interface OtpProps {
   firstRef?: RefObject<HTMLInputElement>;
   secoandRef?: RefObject<HTMLInputElement>;
   thirdRef?: RefObject<HTMLInputElement>;
   fourthRef?: RefObject<HTMLInputElement>;
+  isError?: boolean;
 }
 
 const OtpField = (props: OtpProps) => {
-  const { firstRef, secoandRef, thirdRef, fourthRef, } = props;
+  const { firstRef, secoandRef, thirdRef, fourthRef, isError } = props;
 
   useEffect(() => {
     firstRef?.current?.focus();
@@ -31,13 +34,22 @@ const OtpField = (props: OtpProps) => {
     fourthRef?.current?.blur();
   }
 
+  const className: string = clsx("input__otp__box", {
+    input__otp__error: isError === true,
+  });
+
   return (
-    <Stack direction="row" alignItems={"flex-start"} justifyContent={"space-between"}>
-      <input type="text" onChange={handleFirst} className="input__otp__box" ref={firstRef} />
-      <input type="text" onChange={handleSecoand} className="input__otp__box" ref={secoandRef} />
-      <input type="text" onChange={handleThird} className="input__otp__box" ref={thirdRef} />
-      <input type="text" onChange={handleFourth} className="input__otp__box" ref={fourthRef} />
-    </Stack>
+    <div>
+      <Stack direction="row" alignItems={"flex-start"} justifyContent={"space-between"}>
+        <input type="text" onChange={handleFirst} className={className} ref={firstRef} />
+        <input type="text" onChange={handleSecoand} className={className} ref={secoandRef} />
+        <input type="text" onChange={handleThird} className={className} ref={thirdRef} />
+        <input type="text" onChange={handleFourth} className={className} ref={fourthRef} />
+      </Stack>
+      <Typography fontSize={"12px"} height={"1px"} color={"red"}>
+        {isError && "Invalid OTP"}
+      </Typography>
+    </div>
   )
 }
 

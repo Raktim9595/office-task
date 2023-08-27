@@ -4,7 +4,12 @@
   flex-shrink: 0;
 }
 
-.loading__svg path {
+.loading__svg__page {
+  height: 50px;
+  width: 50px;
+}
+
+.loading__svg > path {
   stroke: #ffffff;
   stroke-width: 6;
   stroke-dasharray: 288.5;
@@ -13,6 +18,10 @@
   transform-origin: 50px 50px;
   animation: pathStroke 3.75s infinite ease-in-out,
     pathRotate 7.5s infinite cubic-bezier(1, 0.5, 0, 0.5);
+}
+
+.loading__svg__page > path {
+  stroke: #0F6EFB;
 }
 
 @keyframes pathStroke {

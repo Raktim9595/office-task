@@ -9,3 +9,4 @@ export { default as AgreeCheckBox } from "./checkbox/AgreeTermsCheckbox";
 export { default as HydraX } from "./logo/Hydrax";
 export { default as NewPassword } from "./otpFields/NewPassword";
 export { default as ConfirmNewPassword } from "./otpFields/ConfirmNewPassword";
+export { default as Loading } from "./icons/Loading";

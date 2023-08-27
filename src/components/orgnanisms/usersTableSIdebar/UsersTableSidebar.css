@@ -1,0 +1,8 @@
+@import "../../settings/_variables.css";
+
+.users__sidebar {
+  flex-basis: max-content;
+  background-color: #fff;
+  height: 100vh;
+  padding: 0 36px;
+}

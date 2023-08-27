@@ -1,0 +1,64 @@
+@import "../../settings/_variables.css";
+
+.users__table__wrapper {
+  width: 100%;
+  padding: 100px;
+  background-color: #fff;
+}
+
+.users__table__header {
+  background: #edf6ff;
+  border: none;
+  text-align: left;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  width: 940px;
+}
+
+.users__table__row {
+  border: 1px solid #D9D9D9;
+}
+
+td:not(:last-child) {
+  border-right: 1px solid #D9D9D9;
+}
+
+th,
+td {
+  padding: 5px 15px;
+}
+
+.users__table__data {
+  height: 42px;
+  max-height: 42px;
+}
+
+.table__row--heading {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  font-size: normal;
+  line-height: 120%;
+  border: 1px solid #D9D9D9;
+  text-align: left;
+}
+
+.table__row--heading:first-child {
+  border-left: 0;
+}
+
+.table__row--heading:last-child {
+  border-right: 0;
+}
+
+.users__table__row {
+  border-left: 0px;
+  border-right: 0px;
+}
+
+.table__row--heading:first-child {
+  width: 40px;
+}

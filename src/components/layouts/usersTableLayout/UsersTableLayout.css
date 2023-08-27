@@ -1,0 +1,10 @@
+@import "../../settings/_variables.css";
+
+.usersTable__layout__page {
+  background-color: var(--grey--50);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}

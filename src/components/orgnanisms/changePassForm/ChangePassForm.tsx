@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Stack, Typography, Divider } from "@mui/material";
 import { FormikProps, useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 
 import "./ChangePassForm.css";
@@ -11,6 +11,8 @@ import { confrimPassValidation } from "../../../validation/authValidation";
 import { ChangePassProps } from "../../../interfaces/authProps";
 import { changePassword } from "../../../requests/authRequests";
 import Loading from "../../atoms/icons/Loading";
+import { AxiosError } from "axios";
+import { ErrorData } from "../../../interfaces/errorData";
 
 const ChangePassForm = () => {
   const firstRef = useRef<HTMLInputElement>(null);
@@ -18,12 +20,21 @@ const ChangePassForm = () => {
   const thirdRef = useRef<HTMLInputElement>(null);
   const fourthRef = useRef<HTMLInputElement>(null);
 
+  const navigate = useNavigate();
+
   const { mutate, isLoading } = useMutation(changePassword, {
     onSuccess: () => {
       console.log("changed password");
+      navigate("/auth/create_user");
     },
-    onError: () => {
+    onError: ({ response }: AxiosError) => {
       console.log("error encounterd using password change");
+      var err: ErrorData = (response?.data) as ErrorData;
+      formik.setErrors({
+        newPassword: err.message,
+        confirmPassword: err.message,
+        otp: "Invalid OTP"
+      })
     }
   });
   const getOtpFileValues = () => {
@@ -60,7 +71,10 @@ const ChangePassForm = () => {
         </Stack>
 
         {/* enter otp  */}
-        <OtpField firstRef={firstRef} secoandRef={secoandRef} thirdRef={thirdRef} fourthRef={fourthRef} />
+        <OtpField isError={Boolean(formik.errors.otp)} firstRef={firstRef} secoandRef={secoandRef} thirdRef={thirdRef} fourthRef={fourthRef} />
+        {/* <Typography component={"p"} height={"1px"} fontSize={"12px"} color={"red"}>
+          {(Boolean(formik.errors.otp) && `${formik.errors.otp}`)}
+        </Typography> */}
 
         {/* divider  */}
         <Divider className="otp__divider" />

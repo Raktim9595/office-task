@@ -9,6 +9,8 @@ import { otpValidation } from "../../../validation/authValidation";
 import { SignUpProps } from "../../../interfaces/signIn";
 import { sendOtp } from "../../../requests/authRequests";
 import Loading from "../../atoms/icons/Loading";
+import { AxiosError } from "axios";
+import { ErrorData } from "../../../interfaces/errorData";
 
 const OtpForm = () => {
   const navigate = useNavigate();
@@ -17,8 +19,12 @@ const OtpForm = () => {
       console.log("success sending otp");
       navigate("/auth/change_password");
     },
-    onError: () => {
+    onError: ({ response }: AxiosError) => {
       console.log("error faced in sending otp");
+      const err: ErrorData = (response?.data) as ErrorData;
+      formik.setErrors({
+        phoneNumber: err.message
+      });
     }
   })
 
@@ -33,8 +39,9 @@ const OtpForm = () => {
     validationSchema: otpValidation,
     onSubmit: ({ phoneNumber }) => {
       mutate({
-        phoneNumber,
+        phoneNumber: `+977${phoneNumber}`,
       })
+      // navigate("/auth/change_password");
     }
   });
   return (

@@ -32,7 +32,7 @@ export const createUser = async ({
 export const sendOtp = async ({ phoneNumber }: OtpProps) => {
   return await axios.post("http://18.136.197.25:8080/users/sendOtpToUser", null, {
     params: {
-      phoneNumber: `+977${phoneNumber}`,
+      phoneNumber,
     },
   });
 };
