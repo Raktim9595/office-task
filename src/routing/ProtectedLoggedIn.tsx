@@ -8,8 +8,8 @@ interface Props {
 
 const LoginProtect = ({ children }: Props) => {
   const { loading } = useCustomSelector(state => state.loading);
-  const { authToken } = useCustomSelector(state => state.token);
-  if (!loading && authToken=== "") {
+  const user = useCustomSelector(state => state.users);
+  if (!loading && !user.id) {
     return children;
   }
   return <Navigate to="/users/users_table" />;

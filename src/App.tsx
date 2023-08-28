@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 
 import CustomTheme from "./theme/CustomTheme";
-import QueryClient from "./queryClient/QueryClient";
 import "./index.css";
 import OtpPage from "./components/pages/otpPage/OtpPage";
 import PageChangePassword from "./components/pages/ChangePassPage/PageChangePassword";
@@ -15,23 +14,40 @@ import UsersTablePage from "./components/pages/usersTablePage/UsersTablePage";
 import Protected from "./routing/Protected";
 import LoadingPage from "./components/pages/Loading/LoadingPage";
 import LoginProtect from "./routing/ProtectedLoggedIn";
+import { useQuery } from "react-query";
+import { getLoggedInUser } from "./requests/userRequests";
+import { LoggedInUser } from "./interfaces/userRedux";
+import { getAuthTokemFromLocalStorage } from "./utils/authToken/getAuthToken";
 
 const App = () => {
   const dispatch = useCustomDispatch();
   const { loading } = useCustomSelector(state => state.loading);
 
+  const { refetch } = useQuery<LoggedInUser>({
+    queryKey: "loggedInUser",
+    enabled: false,
+    queryFn: () => getLoggedInUser({
+      authToken: getAuthTokemFromLocalStorage(),
+    }).then(res => res.data),
+    onSuccess: ({ id, email, phoneNumber, name }) => {
+      dispatch(setUser({
+        id,
+        email,
+        phoneNumber,
+        name
+      }))
+      dispatch(setLoading());
+    }, onError: () => {
+      dispatch(setLoading())
+    }
+  })
+
   useEffect(() => {
-    const token: string = localStorage.getItem("authToken") as string;
+    const token: string = getAuthTokemFromLocalStorage();
     if (token !== null) {
       dispatch(setToken({ authToken: `${token}` }));
-      dispatch(setUser({
-        id: 1,
-        name: "Raktim Thapa",
-        email: "apple123456@gmail.com",
-        phoneNumber: "9814482973"
-      }))
     }
-    dispatch(setLoading());
+    refetch();
   }, []);
 
   if (loading) {
@@ -40,29 +56,27 @@ const App = () => {
 
   return (
     <CustomTheme>
-      <QueryClient>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Protected>
-              <p>Home</p>
-            </Protected>} />
-            <Route path="/auth/create_user" element={<LoginProtect>
-              <AuthPage />
-            </LoginProtect>} />
-            <Route path="/auth/otp" element={<LoginProtect>
-              <OtpPage />
-            </LoginProtect>} />
-            <Route path="/auth/change_password" element={<LoginProtect>
-              <PageChangePassword />
-            </LoginProtect>} />
-            <Route path="/users/users_table" element={
-              <Protected>
-                <UsersTablePage />
-              </Protected>
-            } />
-          </Routes>
-        </BrowserRouter>
-      </QueryClient>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Protected>
+            <p>Home</p>
+          </Protected>} />
+          <Route path="/auth/create_user" element={<LoginProtect>
+            <AuthPage />
+          </LoginProtect>} />
+          <Route path="/auth/otp" element={<LoginProtect>
+            <OtpPage />
+          </LoginProtect>} />
+          <Route path="/auth/change_password" element={<LoginProtect>
+            <PageChangePassword />
+          </LoginProtect>} />
+          <Route path="/users/users_table" element={
+            <Protected>
+              <UsersTablePage />
+            </Protected>
+          } />
+        </Routes>
+      </BrowserRouter>
     </CustomTheme>
   );
 };

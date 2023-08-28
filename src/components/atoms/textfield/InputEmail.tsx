@@ -23,6 +23,7 @@ const InputEmail = ({
         helperText={formik.touched.email && formik.errors.email}
         sx={{
           height: "52px",
+          marginBottom: "4px"
         }}
       />
     </div>

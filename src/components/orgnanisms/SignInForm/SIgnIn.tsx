@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { FormikProps, useFormik } from "formik";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
@@ -9,10 +9,12 @@ import { SignInProps } from "../../../interfaces/signIn";
 import { Button, InputEmail, InputPassword, CustomChecbox, Loading } from "../../atoms";
 import { siginInValidation } from "../../../validation/authValidation";
 import { loginUser } from "../../../requests/authRequests";
-import { useCustomDispatch } from "../../../store/hooks";
+import { useCustomDispatch, useCustomSelector } from "../../../store/hooks";
 import { setUser } from "../../../store/userSlice";
 import { ErrorData } from "../../../interfaces/errorData";
 import { setToken } from "../../../store/authTokenSlice";
+import { getLoggedInUser } from "../../../requests/userRequests";
+import { LoggedInUser } from "../../../interfaces/userRedux";
 
 interface Props {
   changeSingUp?: () => void;
@@ -21,21 +23,15 @@ interface Props {
 const SIgnIn = ({ changeSingUp }: Props) => {
   const dispatch = useCustomDispatch();
   const navigate = useNavigate();
+  const { authToken } = useCustomSelector(state => state.token);
 
   const { mutate, isLoading, isSuccess } = useMutation(loginUser, {
     onSuccess: (res) => {
-      dispatch(setUser({
-        id: 1,
-        name: "Raktim Thapa",
-        email: "apple123456@gmail.com",
-        phoneNumber: "9814482973"
-      }));
       dispatch(setToken({
-        authToken: res.data.token
+        authToken: res.data.accessToken
       }));
-      localStorage.setItem("authToken", res.data.token);
+      localStorage.setItem("authToken", res.data.accessToken);
       console.log("login success");
-      navigate("/users/users_table")
     },
     onError: ({ response }: AxiosError) => {
       var err: ErrorData = (response?.data) as ErrorData;
@@ -50,6 +46,24 @@ const SIgnIn = ({ changeSingUp }: Props) => {
       }
     }
   });
+
+  // get the loggedin user 
+  useQuery<LoggedInUser>({
+    queryKey: "loggedInUser",
+    queryFn: () => getLoggedInUser({
+      authToken: authToken as string,
+    }).then(res => res.data),
+    enabled: authToken!=="",
+    onSuccess: (res) => {
+      dispatch(setUser({
+        id: res.id,
+        email: res.email,
+        name: res.name,
+        phoneNumber: res.phoneNumber
+      }))
+      navigate("/users/users_table")
+    }
+  })
   const formik: FormikProps<SignInProps> = useFormik<SignInProps>({
     initialValues: {
       email: "",
@@ -111,9 +125,15 @@ const SIgnIn = ({ changeSingUp }: Props) => {
         {/* submit button  */}
         {isSuccess ? (
           <Button type="button" color="success" size="full" children={<Typography>Signed In</Typography>} />
+        ) : 
+        isLoading ? (
+          <Button type="button" size="full" children={<Loading />} />
         ) : (
-          <Button type={isLoading ? "button" : "submit"} size="full" children={isLoading ? <Loading /> : <Typography>Sign In</Typography>} />
-        )}
+          <Button type="submit" size="full">
+            <Typography>Sign In</Typography>
+          </Button>
+        )
+}
 
         {/* forgot password  */}
         <div className="signIn__forgotPass">

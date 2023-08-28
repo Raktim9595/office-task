@@ -6,9 +6,9 @@ interface Props {
 };
 
 const Protected = ({ children }: Props) => {
-  const { authToken } = useCustomSelector(state => state.token);
   const { loading } = useCustomSelector(state => state.loading);
-  if (!loading && authToken === "") {
+  const user = useCustomSelector(state => state.users);
+  if (!loading && !user.id) {
     return <Navigate to={"/auth/create_user"} />
   }
 
