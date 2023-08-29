@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import CustomTheme from "./theme/CustomTheme";
 import "./index.css";
@@ -16,20 +16,43 @@ import LoadingPage from "./components/pages/Loading/LoadingPage";
 import LoginProtect from "./routing/ProtectedLoggedIn";
 import { useQuery } from "react-query";
 import { getLoggedInUser } from "./requests/userRequests";
-import { LoggedInUser } from "./interfaces/userRedux";
-import { getAuthTokemFromLocalStorage } from "./utils/authToken/getAuthToken";
+import { ChangeToken, LoggedInUser } from "./interfaces/userRedux";
+import { getAuthTokemFromLocalStorage, getRefreshTokenStorage } from "./utils/authToken/getAuthToken";
+import { refreshTokenAuth } from "./requests/authRequests";
 
 const App = () => {
   const dispatch = useCustomDispatch();
   const { loading } = useCustomSelector(state => state.loading);
+  const { authToken } = useCustomSelector(state => state.token);
 
-  const { refetch } = useQuery<LoggedInUser>({
+  const { refetch: tokenRefetch } = useQuery<ChangeToken>({
+    queryKey: "refreshToken",
+    queryFn: () => refreshTokenAuth({ refreshToken: getRefreshTokenStorage() }).then(res => res.data),
+    enabled: false,
+    onSuccess: (res) => {
+      console.log(res);
+      localStorage.setItem("authToken", res.accessToken as string);
+      localStorage.setItem("refreshToken", res.refreshToken as string);
+      dispatch(setToken({
+        authToken: res.accessToken,
+        refreshToken: res.refreshToken,
+      }))
+      userRefetch();
+      dispatch(setLoading())
+    }
+  })
+
+  interface resProps {
+    response?: any
+  }
+
+  const { refetch: userRefetch } = useQuery({
     queryKey: "loggedInUser",
     enabled: false,
     queryFn: () => getLoggedInUser({
       authToken: getAuthTokemFromLocalStorage(),
     }).then(res => res.data),
-    onSuccess: ({ id, email, phoneNumber, name }) => {
+    onSuccess: ({ id, email, phoneNumber, name }: LoggedInUser) => {
       dispatch(setUser({
         id,
         email,
@@ -37,18 +60,26 @@ const App = () => {
         name
       }))
       dispatch(setLoading());
-    }, onError: () => {
-      dispatch(setLoading())
+    }, onError: ({ response }: resProps) => {
+      if (response.status === 403) {
+        console.log("inside 403")
+        tokenRefetch();
+      } else {
+        dispatch(setLoading());
+      }
     }
   })
 
   useEffect(() => {
     const token: string = getAuthTokemFromLocalStorage();
-    if (token !== null) {
-      dispatch(setToken({ authToken: `${token}` }));
+    const refToken: string = getRefreshTokenStorage();
+    if (token !== null && refToken !== null) {
+      dispatch(setToken({ authToken: `${token}`, refreshToken: `${refToken}`, }));
+      userRefetch();
+    } else {
+      dispatch(setLoading());
     }
-    refetch();
-  }, []);
+  }, [authToken]);
 
   if (loading) {
     return <LoadingPage />

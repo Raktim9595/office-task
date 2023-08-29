@@ -14,6 +14,7 @@ const UsersTableSidebar = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("refreshToken");
     dispatch(removeUser());
     dispatch(removeToken());
     navigate("/auth/create_user");

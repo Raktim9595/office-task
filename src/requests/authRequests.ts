@@ -6,6 +6,10 @@ import {
   ChangePassProps
 } from "../interfaces/authProps";
 
+interface RefreshTokenProps {
+  refreshToken?: string;
+};
+
 export const loginUser = async ({ email, password }: LoginAuthProps) => {
   return await axios.post("http://18.136.197.25:8080/login", {
     email,
@@ -43,6 +47,14 @@ export const changePassword = async({ otp, newPassword, confirmPassword }: Chang
       otp,
       newPassword,
       confirmPassword,
+    }
+  })
+}
+
+export const refreshTokenAuth = async ({ refreshToken }: RefreshTokenProps) => {
+  return await axios.get("http://18.136.197.25:8080/refresh/token", {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
     }
   })
 }

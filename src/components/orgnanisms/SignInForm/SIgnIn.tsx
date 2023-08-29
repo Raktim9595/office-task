@@ -28,14 +28,16 @@ const SIgnIn = ({ changeSingUp }: Props) => {
   const { mutate, isLoading, isSuccess } = useMutation(loginUser, {
     onSuccess: (res) => {
       dispatch(setToken({
-        authToken: res.data.accessToken
+        authToken: res.data.accessToken,
+        refreshToken: res.data.refreshToken,
       }));
       localStorage.setItem("authToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
       console.log("login success");
     },
     onError: ({ response }: AxiosError) => {
       var err: ErrorData = (response?.data) as ErrorData;
-      if(response?.status === 404) {
+      if (response?.status === 404) {
         formik.setErrors({
           email: err.message
         })
@@ -53,7 +55,7 @@ const SIgnIn = ({ changeSingUp }: Props) => {
     queryFn: () => getLoggedInUser({
       authToken: authToken as string,
     }).then(res => res.data),
-    enabled: authToken!=="",
+    enabled: authToken !== "",
     onSuccess: (res) => {
       dispatch(setUser({
         id: res.id,
@@ -64,6 +66,7 @@ const SIgnIn = ({ changeSingUp }: Props) => {
       navigate("/users/users_table")
     }
   })
+
   const formik: FormikProps<SignInProps> = useFormik<SignInProps>({
     initialValues: {
       email: "",
@@ -125,15 +128,15 @@ const SIgnIn = ({ changeSingUp }: Props) => {
         {/* submit button  */}
         {isSuccess ? (
           <Button type="button" color="success" size="full" children={<Typography>Signed In</Typography>} />
-        ) : 
-        isLoading ? (
-          <Button type="button" size="full" children={<Loading />} />
-        ) : (
-          <Button type="submit" size="full">
-            <Typography>Sign In</Typography>
-          </Button>
-        )
-}
+        ) :
+          isLoading ? (
+            <Button type="button" size="full" children={<Loading />} />
+          ) : (
+            <Button type="submit" size="full">
+              <Typography>Sign In</Typography>
+            </Button>
+          )
+        }
 
         {/* forgot password  */}
         <div className="signIn__forgotPass">

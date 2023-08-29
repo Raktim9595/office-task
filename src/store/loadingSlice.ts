@@ -12,10 +12,13 @@ export const loadingSlice = createSlice({
   reducers: {
     setLoading: (state) => {
       state.loading = false;
+    },
+    resetLoading: (state) => {
+      state.loading = true;
     }
   }
 });
 
-export const { setLoading } = loadingSlice.actions;
+export const { setLoading, resetLoading } = loadingSlice.actions;
 
 export default loadingSlice.reducer;
