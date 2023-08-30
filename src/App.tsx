@@ -25,7 +25,7 @@ const App = () => {
   const { loading } = useCustomSelector(state => state.loading);
   const { authToken } = useCustomSelector(state => state.token);
 
-  const { refetch: tokenRefetch } = useQuery<ChangeToken>({
+  useQuery<ChangeToken>({
     queryKey: "refreshToken",
     queryFn: () => refreshTokenAuth({ refreshToken: getRefreshTokenStorage() }).then(res => res.data),
     enabled: false,
@@ -38,17 +38,13 @@ const App = () => {
         refreshToken: res.refreshToken,
       }))
       userRefetch();
-      dispatch(setLoading())
     }
   })
-
-  interface resProps {
-    response?: any
-  }
 
   const { refetch: userRefetch } = useQuery({
     queryKey: "loggedInUser",
     enabled: false,
+    retry: 1,
     queryFn: () => getLoggedInUser({
       authToken: getAuthTokemFromLocalStorage(),
     }).then(res => res.data),
@@ -60,14 +56,7 @@ const App = () => {
         name
       }))
       dispatch(setLoading());
-    }, onError: ({ response }: resProps) => {
-      if (response.status === 403) {
-        console.log("inside 403")
-        tokenRefetch();
-      } else {
-        dispatch(setLoading());
-      }
-    }
+    },
   })
 
   useEffect(() => {

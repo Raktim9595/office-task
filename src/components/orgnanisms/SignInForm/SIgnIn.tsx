@@ -37,11 +37,11 @@ const SIgnIn = ({ changeSingUp }: Props) => {
     },
     onError: ({ response }: AxiosError) => {
       var err: ErrorData = (response?.data) as ErrorData;
-      if (response?.status === 404) {
+      if (response?.status === 401) {
         formik.setErrors({
           email: err.message
         })
-      } else {
+      } else if(response?.status === 400) {
         formik.setErrors({
           password: err.message
         })

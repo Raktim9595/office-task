@@ -9,10 +9,10 @@ import QueryClient from './queryClient/QueryClient.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <QueryClient>
-      <Provider store={store}>
+    <Provider store={store}>
+      <QueryClient>
         <App />
-      </Provider>
-    </QueryClient>
+      </QueryClient>
+    </Provider>
   </React.StrictMode>,
 )

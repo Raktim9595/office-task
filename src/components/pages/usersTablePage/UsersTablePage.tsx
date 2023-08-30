@@ -20,8 +20,9 @@ interface usersProps {
 const UsersTablePage = () => {
   const { authToken } = useCustomSelector(state => state.token);
 
-  const { data, isLoading, isError } = useQuery<usersProps[]>({
+  const { data, isLoading } = useQuery<usersProps[]>({
     queryKey: "getAllUsers",
+    enabled: authToken !== "",
     queryFn: () => getAllUsers({ authToken: authToken as string }).then(res => res.data),
   });
 
@@ -29,8 +30,7 @@ const UsersTablePage = () => {
     <UsersTableLayout>
       <UsersTableSidebar />
       {isLoading && <p>loading</p>}
-      {isError && <p>error</p>}
-      {(!isLoading && !isError) && <UsersTable data={data!} columns={UserCols} />}
+      {(!isLoading) && <UsersTable data={data!} columns={UserCols} />}
     </UsersTableLayout>
   )
 }

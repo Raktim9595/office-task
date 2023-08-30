@@ -72,9 +72,6 @@ const ChangePassForm = () => {
 
         {/* enter otp  */}
         <OtpField isError={Boolean(formik.errors.otp)} firstRef={firstRef} secoandRef={secoandRef} thirdRef={thirdRef} fourthRef={fourthRef} />
-        {/* <Typography component={"p"} height={"1px"} fontSize={"12px"} color={"red"}>
-          {(Boolean(formik.errors.otp) && `${formik.errors.otp}`)}
-        </Typography> */}
 
         {/* divider  */}
         <Divider className="otp__divider" />
